@@ -1,0 +1,1 @@
+export const URL="https://www.noazeye.com/site/dashboard/api/index.php?" 

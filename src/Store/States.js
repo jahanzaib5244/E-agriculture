@@ -1,0 +1,8 @@
+export const LOGIN="LOGIN"
+export const LOGOUT="LOGOUT"
+export const FORGETPASSWORD="FORGETPASSWORD"
+export const RETREIVEDUSER="RETREIVEDUSER"
+export const COMPANIES="COMPANIES"
+export const PUBLICVIDEO="PUBLICVIDEO"
+export const PRIVATEVIDEO="PRIVATEVIDEO"
+export const IMAGE="IMAGE"
