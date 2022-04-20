@@ -40,7 +40,7 @@ export default function AccountSetting() {
 
     const [loading, setloading] = useState(false)
     const [invalid, setinvalid] = useState(null)
-    const [userDOB, setuserDOB] = useState('29-11-1997')
+    const [userDOB, setuserDOB] = useState('24-11-1997')
     const [alertmsg, setalertmsg] = useState('')
     const [alertShow, setalertShow] = useState(false)
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -120,7 +120,7 @@ export default function AccountSetting() {
 
     const ctaUpdateProfile = (val) => {
         console.log('clicked', val)
-        // dispatch(UpdateProfileApi(setinvalid, setalertShow, setalertmsg, setloading, val.firstName, val.lastName, val.Phone, val.Address, userDOB))
+        dispatch(UpdateProfileApi(setinvalid, setalertShow, setalertmsg, setloading, val.firstName, val.lastName, val.Phone, val.Address, userDOB))
     }
     const confirm = () => {
         setalertShow(false)

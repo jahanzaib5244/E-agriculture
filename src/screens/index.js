@@ -1,0 +1,11 @@
+export {default as Home} from './home/Home';
+export {default as Chat} from './chat/Chat';
+export {default as Furtilizer} from './furtilizer/Furtilizer';
+export {default as Shop} from './shop/Shop';
+export {default as Setting} from './setting/Setting';
+export {default as GiftedChat} from './giftedChat/GiftedChat';
+export {default as FAQ} from './faq/FAQ';
+export {default as MarketPrice} from './marketPrice/MarketPrice';
+export {default as Videos} from './videos/Videos';
+export {default as SoilTesting} from './soilTesting/SoilTesting';
+export {default as CropPractices} from './cropPractices/CropPractices';

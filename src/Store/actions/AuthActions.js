@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FORGETPASSWORD, LOGIN, LOGOUT, RETREIVEDUSER, PUBLICVIDEO, COMPANIES, PRIVATEVIDEO, IMAGE } from '../States';
 import axios from 'axios';
-import {ToastAndroid , Platform ,AlertIOS } from 'react-native'
+import { ToastAndroid, Platform, AlertIOS } from 'react-native'
 import { URL } from '../../config/URL';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+// import storage from '@react-native-firebase/storage';
+
 
 export const dologin = (email, password, setisinvalid, setloading) => async (dispatch) => {
     setloading(true)
@@ -13,17 +15,20 @@ export const dologin = (email, password, setisinvalid, setloading) => async (dis
     try {
         let logindata = {
             usertoken: null,
+            userdata: null,
         }
-        const res=await auth().signInWithEmailAndPassword(email,password)
-        console.log(res)
-            logindata.usertoken = 'zaib'
-           
-           
-            
-            setloading(false)
+        const res = await auth().signInWithEmailAndPassword(email, password)
+        console.log(res.user.uid)
+        let data = await firestore().collection('Users').doc(res.user.uid).get()
+        if (data._exists) {
+            console.log(data._data);
+            // logindata.userdata = res.user.uid
+        }
+        logindata.usertoken = res.user.uid
+        setloading(false)
 
 
-     
+
 
         dispatch({
             type: LOGIN,
@@ -32,26 +37,24 @@ export const dologin = (email, password, setisinvalid, setloading) => async (dis
 
     } catch (error) {
         setloading(false)
-        setisinvalid('No Internet Connection')
-        console.log(error)
+        setisinvalid(`${error}`)
+        console.error(error)
     }
 
 }
 export const UpdateProfileApi = (setinvalid, setalertShow, setalertmsg, setloading, firstName, lastName, Phone, Address, DOB) => async (dispatch) => {
     try {
-        setinvalid(null)
+
         setloading(true)
-        let user_id = await AsyncStorage.getItem('user-id')
-        let res = await axios.get(`${URL}action=update_user_profile&user_id=${user_id}&user_first_name=${firstName}&user_last_name=${lastName}&user_phone=${Phone}&user_address=${Address}&user_dob=${DOB}`)
-        console.log(res.data)
-        if (res.data.sts == 'success') {
-            setalertmsg(res.data.msg)
-            setalertShow(true)
-        } else {
-            if (res.data.sts == 'danger') {
-                setinvalid(res.data.msg)
-            }
-        }
+
+        let res = await firestore().collection('Users').doc('Or3a6KtKmKgbLWLVSvd5BTkNmmN2').update({
+            FirstName: firstName,
+            LastName: lastName,
+            Phone: Phone,
+            Address: Address,
+            DOB: DOB
+        })
+        console.log(res)
     } catch (error) {
         console.log(error)
     } finally {
@@ -103,7 +106,7 @@ export const ForgetPasswordApi = (email, setisinvalid, setloading, setalertMsg, 
         setloading(true)
         const res = await auth().sendPasswordResetEmail(email)
         console.log(res)
-        
+
     } catch (error) {
         console.log(error)
     } finally {
@@ -130,31 +133,34 @@ export const listCompanies = (getCompanies) => async (dispatch) => {
         getCompanies(false)
     }
 }
-export const RegisterApi = (setinvalid, setshow, setalertMsg, setloading, ConfirmPassword, Email,  firstName, lastName,  userName) => async (dispatch) => {
+export const RegisterApi = (setinvalid, setshow, setalertMsg, setloading, ConfirmPassword, Email, firstName, lastName, userName) => async (dispatch) => {
     try {
         setinvalid(null)
         console.log(setloading, ConfirmPassword, Email, firstName, lastName, userName,)
         setloading(true)
-        const res = await auth().createUserWithEmailAndPassword(Email,ConfirmPassword)
-       console.log(res.user.uid)
-       const add = await firestore().collection('Users').doc(res.user.uid).set({
-         FirstName: firstName,
-         LastName: lastName,
-         Email: Email,
-         UserName: userName,
-         ProfilePic: 'https://firebasestorage.googleapis.com/v0/b/e-agriculture-ca3f3.appspot.com/o/userProfiles%2Fdefault.png?alt=media&token=c1abb2b4-436e-4c19-94f4-6c741e3f73ef',
-         uid: res.user.uid,
-       })
-       setshow(true)
-       setalertMsg('User created successfully')
+        const res = await auth().createUserWithEmailAndPassword(Email, ConfirmPassword)
+        console.log(res.user.uid)
+        const add = await firestore().collection('Users').doc(res.user.uid).set({
+            FirstName: firstName,
+            LastName: lastName,
+            Email: Email,
+            UserName: userName,
+            ProfilePic: 'https://firebasestorage.googleapis.com/v0/b/e-agriculture-ca3f3.appspot.com/o/userProfiles%2Fdefault.png?alt=media&token=c1abb2b4-436e-4c19-94f4-6c741e3f73ef',
+            uid: res.user.uid,
+        })
+        setshow(true)
+        setalertMsg('User created successfully')
     } catch (error) {
-        console.log(error,'register')
+        console.log(error, 'register')
     } finally {
         setloading(false)
     }
 }
 export const uploadImage = (base64) => async (dispatch) => {
     try {
+
+
+        const reference = await storage().ref('/userProfiles/');
         var profile_pic = ""
 
         const imagedata = new FormData

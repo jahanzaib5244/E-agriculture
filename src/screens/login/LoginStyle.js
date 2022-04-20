@@ -62,7 +62,7 @@ export const LoginStyle = StyleSheet.create({
     },
     error: {
         color: Colors.danger,
-        paddingLeft: 40,
+        paddingHorizontal: 40,
         marginTop: 5
     }
 })
