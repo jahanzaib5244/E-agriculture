@@ -60,7 +60,7 @@ export default function TabNavigation() {
         name={NavStrings.Shop}
         component={Shop}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           tabBarBadge: null,
           headerTitle: 'Furtilizer',
@@ -78,7 +78,7 @@ export default function TabNavigation() {
         }}
         name={NavStrings.Furtilizer}
         component={Furtilizer}
-      />
+      /> */}
       <Tab.Screen
         options={{
           tabBarBadge: null,

@@ -1,8 +1,7 @@
-export const LOGIN="LOGIN"
-export const LOGOUT="LOGOUT"
-export const FORGETPASSWORD="FORGETPASSWORD"
-export const RETREIVEDUSER="RETREIVEDUSER"
-export const COMPANIES="COMPANIES"
-export const PUBLICVIDEO="PUBLICVIDEO"
-export const PRIVATEVIDEO="PRIVATEVIDEO"
-export const IMAGE="IMAGE"
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const USERDATA = 'USERDATA';
+export const WEATHER = 'WEATHER';
+export const ALLPRICE = 'ALLPRICE';
+export const ALLPRODUCTS = 'ALLPRODUCTS';
+export const ALLCROPS = 'ALLCROPS';

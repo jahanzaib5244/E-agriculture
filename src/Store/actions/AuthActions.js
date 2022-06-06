@@ -1,186 +1,195 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FORGETPASSWORD, LOGIN, LOGOUT, RETREIVEDUSER, PUBLICVIDEO, COMPANIES, PRIVATEVIDEO, IMAGE } from '../States';
-import axios from 'axios';
-import { ToastAndroid, Platform, AlertIOS } from 'react-native'
-import { URL } from '../../config/URL';
+import {LOGOUT, USERDATA} from '../States';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-// import storage from '@react-native-firebase/storage';
+import storage from '@react-native-firebase/storage';
+import moment from 'moment';
 
-
-export const dologin = (email, password, setisinvalid, setloading) => async (dispatch) => {
-    setloading(true)
-    setisinvalid(null)
+export const dologin =
+  (email, password, setisinvalid, setloading) => async dispatch => {
+    setloading(true);
+    setisinvalid('');
 
     try {
-        let logindata = {
-            usertoken: null,
-            userdata: null,
-        }
-        const res = await auth().signInWithEmailAndPassword(email, password)
-        console.log(res.user.uid)
-        let data = await firestore().collection('Users').doc(res.user.uid).get()
-        if (data._exists) {
-            console.log(data._data);
-            // logindata.userdata = res.user.uid
-        }
-        logindata.usertoken = res.user.uid
-        setloading(false)
-
-
-
-
-        dispatch({
-            type: LOGIN,
-            payload: logindata
-        })
-
+      await auth().signInWithEmailAndPassword(email, password);
+      setloading(false);
     } catch (error) {
-        setloading(false)
-        setisinvalid(`${error}`)
-        console.error(error)
-    }
-
-}
-export const UpdateProfileApi = (setinvalid, setalertShow, setalertmsg, setloading, firstName, lastName, Phone, Address, DOB) => async (dispatch) => {
-    try {
-
-        setloading(true)
-
-        let res = await firestore().collection('Users').doc('Or3a6KtKmKgbLWLVSvd5BTkNmmN2').update({
-            FirstName: firstName,
-            LastName: lastName,
-            Phone: Phone,
-            Address: Address,
-            DOB: DOB
-        })
-        console.log(res)
-    } catch (error) {
-        console.log(error)
+      setloading(false);
+      setisinvalid(`${error.message}`);
+      console.error(error);
     } finally {
-        setloading(false)
+      setloading(false);
     }
-}
-
-export const dologout = () => async (dispatch) => {
+  };
+export const UpdateProfileApi =
+  (
+    setinvalid,
+    setalertShow,
+    setloading,
+    firstName,
+    lastName,
+    Phone,
+    Address,
+    uploadImage,
+    userImage,
+  ) =>
+  async dispatch => {
     try {
-        dispatch({
-            type: LOGOUT,
-        })
+      setloading(true);
+      setinvalid('');
+      let ImageUrl = '';
+      const uid = auth().currentUser.uid;
+      if (uploadImage) {
+        const reference = storage().ref(`/userProfiles/${uid}.png`);
+        await reference.putFile(userImage);
+        ImageUrl = await reference.getDownloadURL();
+      }
+      let res = await firestore()
+        .collection('Users')
+        .doc(uid)
+        .update({
+          FirstName: firstName,
+          LastName: lastName,
+          Phone: Phone,
+          Address: Address,
+          ProfilePic: uploadImage ? ImageUrl : userImage,
+        });
+      setalertShow(true);
     } catch (error) {
-        console.log(error)
+      console.log(error);
+      setinvalid(error.meaasge);
+    } finally {
+      setloading(false);
     }
-}
+  };
 
+export const dologout = () => async dispatch => {
+  try {
+    const logout = await auth().signOut();
+    console.log(logout);
+    dispatch({
+      type: LOGOUT,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-
-export const ApiUpdatePassword = (setinvalid, setloading, oldPassword, Password, ConfirmPassword, setalertMsg, setshow) => async (dispatch) => {
-    try {
-        setloading(true)
-        setinvalid(null)
-        let user_id = await AsyncStorage.getItem('user-id')
-        let res = await axios.get(`${URL}action=update_password&old_password=${oldPassword}&new_password=${Password}&confirm_password=${ConfirmPassword}&user_id=${user_id}`)
-        console.log(res.data)
-        if (res.data.sts == 'success') {
-            setalertMsg(res.data.msg)
-            setshow(true)
-        } else {
-            if (res.data.sts == "warning") {
-                setinvalid(res.data.msg)
-            }
+export const getUserData = setloading => async dispatch => {
+  try {
+    const uid = auth().currentUser.uid;
+    firestore()
+      .collection('Users')
+      .doc(uid)
+      .onSnapshot(snapshot => {
+        if (snapshot.exists) {
+          console.log(snapshot.data());
+          dispatch({
+            type: USERDATA,
+            payload: {data: snapshot.data(), role: snapshot.data().role},
+          });
         }
-    } catch (error) {
+      });
+  } catch (error) {
+  } finally {
+    setloading(false);
+  }
+};
 
-    } finally {
-        setloading(false)
-    }
-}
-
-
-
-
-export const ForgetPasswordApi = (email, setisinvalid, setloading, setalertMsg, setshow) => async (dispatch) => {
+export const ForgetPasswordApi =
+  (email, setisinvalid, setloading, setalertMsg, setshow) => async dispatch => {
     try {
-        setisinvalid(null)
-        console.log('api call')
-        setloading(true)
-        const res = await auth().sendPasswordResetEmail(email)
-        console.log(res)
-
+      setisinvalid(null);
+      console.log('api call');
+      setloading(true);
+      const res = await auth().sendPasswordResetEmail(email);
+      console.log(res);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     } finally {
-        setloading(false)
+      setloading(false);
     }
-}
+  };
 
-export const listCompanies = (getCompanies) => async (dispatch) => {
-    let companies = []
-    getCompanies(true)
+export const RegisterApi =
+  (
+    setinvalid,
+    setloading,
+    ConfirmPassword,
+    Email,
+    firstName,
+    lastName,
+    userName,
+  ) =>
+  async dispatch => {
     try {
-        const res = await axios.get(`${URL}action=business_list`)
-        console.log(res.data)
-        if (res.data.sts == 'success') {
-            companies = res.data.data
-        }
-        dispatch({
-            type: COMPANIES,
-            payload: companies
-        })
+      setinvalid('');
+      setloading(true);
+      const res = await auth().createUserWithEmailAndPassword(
+        Email,
+        ConfirmPassword,
+      );
+      console.log(res.user.uid);
+      const add = await firestore().collection('Users').doc(res.user.uid).set({
+        FirstName: firstName,
+        LastName: lastName,
+        Email: Email,
+        UserName: userName,
+        role: 'user',
+        ProfilePic:
+          'https://firebasestorage.googleapis.com/v0/b/e-agriculture-ca3f3.appspot.com/o/userProfiles%2Fdefault.png?alt=media&token=c1abb2b4-436e-4c19-94f4-6c741e3f73ef',
+        uid: res.user.uid,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      console.log(add);
+      const adminUid = 'DGUpLyUSaKeYmu8x7gXDqprcbLr2';
+      let time = moment.now();
+      res.user.uid;
+      const chatroomid =
+        adminUid > res.user.uid
+          ? adminUid + '-' + res.user.uid
+          : res.user.uid + '-' + adminUid;
+      await firestore()
+        .collection('chatrooms')
+        .doc(chatroomid)
+        .set({
+          lastMessageTime: time,
+          lastMessages: `Welcome to E-Agricultur ${'\n'} if you have any question feel free to contact us respone will be under 3 to 4 hours`,
+          firstuid: adminUid,
+          seconduid: res.user.uid,
+          messages: [
+            {
+              messageTime: time,
+              text: `Welcome to E-Agricultur ${'\n'} if you have any question feel free to contact us respone will be under 3 to 4 hours`,
+              sender: adminUid,
+            },
+          ],
+        });
     } catch (error) {
-        console.log(error)
+      console.log(error, 'register');
+      setinvalid(error.message);
     } finally {
-        getCompanies(false)
+      setloading(false);
     }
-}
-export const RegisterApi = (setinvalid, setshow, setalertMsg, setloading, ConfirmPassword, Email, firstName, lastName, userName) => async (dispatch) => {
+  };
+
+export const updatePasswordFirebase =
+  (setloading, setinvalid, oldPassword, newPassword) => async dispatch => {
     try {
-        setinvalid(null)
-        console.log(setloading, ConfirmPassword, Email, firstName, lastName, userName,)
-        setloading(true)
-        const res = await auth().createUserWithEmailAndPassword(Email, ConfirmPassword)
-        console.log(res.user.uid)
-        const add = await firestore().collection('Users').doc(res.user.uid).set({
-            FirstName: firstName,
-            LastName: lastName,
-            Email: Email,
-            UserName: userName,
-            ProfilePic: 'https://firebasestorage.googleapis.com/v0/b/e-agriculture-ca3f3.appspot.com/o/userProfiles%2Fdefault.png?alt=media&token=c1abb2b4-436e-4c19-94f4-6c741e3f73ef',
-            uid: res.user.uid,
-        })
-        setshow(true)
-        setalertMsg('User created successfully')
+      setloading(true);
+      setinvalid('');
+      var user = auth().currentUser;
+      const credential = auth.EmailAuthProvider.credential(
+        user.email,
+        oldPassword,
+      );
+      await auth().currentUser.reauthenticateWithCredential(credential);
+      const updated = await user.updatePassword(newPassword);
+      console.log(updated);
     } catch (error) {
-        console.log(error, 'register')
+      console.log(error);
+      setinvalid(error.message);
     } finally {
-        setloading(false)
+      setloading(false);
     }
-}
-export const uploadImage = (base64) => async (dispatch) => {
-    try {
-
-
-        const reference = await storage().ref('/userProfiles/');
-        var profile_pic = ""
-
-        const imagedata = new FormData
-        imagedata.append('img', base64)
-        const userid = await AsyncStorage.getItem('user-id');
-
-        const res = await axios.post(`${URL}action=update_profile_pic&user_id=${userid}`, imagedata)
-        console.log(res)
-        if (res.data.sts == 'success') {
-            profile_pic = res.data.img_path
-
-        }
-        dispatch({
-            type: IMAGE,
-            payload: profile_pic
-        })
-    } catch (error) {
-
-    }
-
-}
-
-
+  };

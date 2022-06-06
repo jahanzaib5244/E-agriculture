@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
   username: {
     fontSize: 23,
     color: COLORS.black,
+    textTransform: 'capitalize',
   },
   email: {
     fontSize: 18,
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   },
   btn: {
     height: moderateVerticalScale(50),
-    borderTopWidth: 0.6,
+    borderBottomWidth: 0.6,
     borderColor: '#dedede',
     justifyContent: 'center',
     paddingLeft: moderateScale(30),
@@ -45,5 +46,9 @@ export const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: FONTS.des,
     fontWeight: '600',
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
   },
 });

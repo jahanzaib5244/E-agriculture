@@ -1,60 +1,81 @@
-import React,{useState} from 'react'
-import { View, TextInput, StyleSheet, Text,Image, TouchableOpacity } from 'react-native'
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {moderateVerticalScale} from 'react-native-size-matters';
 
-import { Colors, font } from '../config/Utils'
+import {Colors, font} from '../config/Utils';
+import FONTS from '../style/FONTS';
 
-export default function Passwordinput({ name, placeholder, inputstyle, onchange, blur }) {
-    const [show, setshow] = useState(true)
-    return (
-        <View style={[inputstyle, styles.Input]}>
-            <Text style={styles.text}>{name}</Text>
-            <View style={{flex:1,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-            <TextInput
-                style={styles.textinput}
-                secureTextEntry={show}
-                placeholder={placeholder}
-                onChangeText={(e)=>onchange(e)}
-                onBlur={(e) => blur(e)}
-                autoCapitalize="none"
-                numberOfLines={1}
-                placeholderTextColor="gray" 
+export default function Passwordinput({
+  name = '',
+  placeholder = '',
+  inputstyle = {},
+  onchange,
+  blur = () => {},
+}) {
+  const [show, setshow] = useState(true);
+  return (
+    <View style={[inputstyle, styles.Input]}>
+      <Text style={styles.text}>{name}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <TextInput
+          style={styles.textinput}
+          secureTextEntry={show}
+          placeholder={placeholder}
+          onChangeText={e => onchange(e)}
+          onBlur={e => blur(e)}
+          autoCapitalize="none"
+          numberOfLines={1}
+          placeholderTextColor="gray"
+        />
+        <TouchableOpacity onPress={() => setshow(!show)}>
+          {show ? (
+            <Image
+              style={{height: 15, width: 20}}
+              source={require('../assets/eyeoff.png')}
             />
-            <TouchableOpacity onPress={()=>setshow(!show)}>
-                {show ? 
-                <Image style={{height:15,width:20}} source={require('../assets/eyeoff.png')}/>
-                :
-                <Image style={{height:15,width:20}} source={require('../assets/eye.png')}/>
-                }
-            
-            </TouchableOpacity>
-            </View>
-        </View>
-    )
+          ) : (
+            <Image
+              style={{height: 15, width: 20}}
+              source={require('../assets/eye.png')}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    Input: {
-        backgroundColor: Colors.white,
-        elevation: 3,
-     
-        borderRadius: 10,
-        padding: 10,
-    },
-    text: {
-        paddingLeft: 15,
-        color: Colors.black,
-        fontSize: font.h3,
-        fontWeight: '700',
-        letterSpacing: 1
-    },
-    textinput: {
-        color: Colors.black,
-       flex:1,
-        marginVertical: 5,
-        marginHorizontal: 5,
-        fontSize: font.h3,
-        padding: 0,
-        paddingHorizontal: 10,
-        marginTop: 5,
-    }
-})
+  Input: {
+    backgroundColor: Colors.white,
+    elevation: 10,
+    borderRadius: 10,
+    padding: 5,
+  },
+  text: {
+    paddingHorizontal: 15,
+    color: Colors.black,
+    fontSize: FONTS.des,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  textinput: {
+    color: Colors.black,
+    marginHorizontal: 5,
+    fontSize: FONTS.des,
+    padding: 0,
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+});

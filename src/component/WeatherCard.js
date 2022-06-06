@@ -2,8 +2,11 @@ import {View, Text, ImageBackground, StyleSheet, Image} from 'react-native';
 import React from 'react';
 
 import {Colors, size} from '../config/Utils';
+import moment from 'moment';
 
-export default function WeatherCard({style}) {
+export default function WeatherCard({style, data = {}}) {
+  const empty = Object.keys(data).length === 0;
+
   return (
     <View style={styles.root}>
       <ImageBackground
@@ -14,10 +17,14 @@ export default function WeatherCard({style}) {
             <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10}}>
               <View style={styles.locationcontainer}>
                 <Image
-                  source={require('../assets/location.png')}
+                  source={
+                    empty
+                      ? require('../assets/locationOff.png')
+                      : require('../assets/location.png')
+                  }
                   style={styles.location}
                 />
-                <Text style={{color: 'white'}}>Faisalabad</Text>
+                <Text style={{color: 'white'}}>{data?.city?.name}</Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', flex: 1}}>
@@ -28,10 +35,18 @@ export default function WeatherCard({style}) {
                   justifyContent: 'center',
                 }}>
                 <Image
-                  source={require('../assets/sun.png')}
+                  source={
+                    empty
+                      ? require('../assets/sun.png')
+                      : {
+                          uri: `https://openweathermap.org/img/wn/${data?.list[0]?.weather[0]?.icon}.png`,
+                        }
+                  }
                   style={styles.sun}
                 />
-                <Text style={{color: 'white'}}>Sunny</Text>
+                <Text style={{color: 'white', fontSize: 20}}>
+                  {empty ? 'no' : data?.list[0]?.weather[0]?.main}
+                </Text>
               </View>
               <View
                 style={{
@@ -40,20 +55,37 @@ export default function WeatherCard({style}) {
                   justifyContent: 'center',
                 }}>
                 <Text style={{fontSize: 60, marginBottom: 10, color: 'white'}}>
-                  18'
+                  {empty
+                    ? 'no provided'
+                    : data?.list[0]?.main?.temp.toString().substring(0, 2)}
                 </Text>
-                <Text style={{color: 'white'}}>12/24'</Text>
+                <Text style={{color: 'white'}}>max/min</Text>
+                <Text style={{color: 'white'}}>
+                  {empty ? 'no' : data?.list[0]?.main?.temp_min}/
+                  {empty ? 'no' : data?.list[0]?.main?.temp_max}
+                </Text>
               </View>
               <View
                 style={{
                   flex: 1.3,
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                 }}>
-                <View style={[styles.condition]}>
+                {/* <View style={[styles.condition]}>
                   <Text style={{color: 'white'}}>26 Good</Text>
+                </View> */}
+                <View style={{marginTop: 20}}>
+                  <Text style={{color: 'white'}}>Humedity</Text>
+                  <Text style={{color: 'white', textAlign: 'center'}}>
+                    {empty ? 'no' : data?.list[0]?.main?.humidity} %
+                  </Text>
                 </View>
-                <Text style={{color: 'white', top: 13}}>S 1.3mph</Text>
+                <View style={{marginTop: 20}}>
+                  <Text style={{color: 'white'}}>Wind Speed</Text>
+                  <Text style={{color: 'white'}}>
+                    {empty ? 'no' : data?.list[0]?.wind?.speed} km/h
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -70,22 +102,32 @@ export default function WeatherCard({style}) {
                 justifyContent: 'space-between',
                 top: 10,
               }}>
-              <Text style={{color: 'white'}}>Mon</Text>
-              <Text style={{color: 'white', paddingRight: 5}}>More</Text>
+              <Text style={{color: 'white'}}>
+                {/* {moment(data?.list[0]?.dt).format('h:m A')} */}
+              </Text>
             </View>
             <Image
               style={{
-                tintColor: 'white',
                 height: 90,
                 width: 90,
                 resizeMode: 'contain',
                 alignSelf: 'center',
                 top: 20,
               }}
-              source={require('../assets/rain.png')}
+              source={
+                empty
+                  ? require('../assets/rain.png')
+                  : {
+                      uri: `https://openweathermap.org/img/wn/${data?.list[1]?.weather[0]?.icon}.png`,
+                    }
+              }
             />
             <Text style={{color: 'white', alignSelf: 'center', top: 29}}>
-              10/17
+              max/min
+            </Text>
+            <Text style={{color: 'white', alignSelf: 'center', top: 29}}>
+              {empty ? 'no' : data?.list[1]?.main?.temp_min}/
+              {empty ? 'no' : data?.list[1]?.main?.temp_max}
             </Text>
           </View>
         </View>
@@ -129,6 +171,5 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     resizeMode: 'contain',
-    tintColor: 'white',
   },
 });

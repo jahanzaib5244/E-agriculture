@@ -1,48 +1,63 @@
-import React from 'react'
-import { View, TextInput, StyleSheet, Text } from 'react-native'
+import React from 'react';
+import {View, TextInput, StyleSheet, Text} from 'react-native';
 
-import { Colors, font } from '../config/Utils'
+import {Colors, font} from '../config/Utils';
+import COLORS from '../style/COLORS';
+import FONTS from '../style/FONTS';
 
-export default function Input({ name, placeholder, inputstyle, onchange, blur, ...otherProps }) {
-    return (
-        <View style={[styles.Input, inputstyle]}>
-            <Text style={styles.text}>{name}</Text>
-            <TextInput
-                {...otherProps}
-                style={styles.textinput}
-                placeholder={placeholder}
-                onChangeText={(e) => onchange(e)}
-                onBlur={(e) => blur(e)}
-                autoCapitalize="none"
-                numberOfLines={1}
-                placeholderTextColor="gray" 
-            />
-        </View>
-    )
+export default function Input({
+  name,
+  placeholder,
+  inputstyle,
+  onchange,
+  blur = () => {},
+  textinputstyle = {},
+  error = false,
+  ...otherProps
+}) {
+  return (
+    <View style={[styles.Input, inputstyle]}>
+      <Text
+        style={[styles.text, {color: error ? COLORS.danger : COLORS.black}]}>
+        {name}
+      </Text>
+      <TextInput
+        {...otherProps}
+        style={[
+          styles.textinput,
+          textinputstyle,
+          {color: error ? COLORS.danger : COLORS.black},
+        ]}
+        placeholder={placeholder}
+        onChangeText={e => onchange(e)}
+        onBlur={e => blur(e)}
+        autoCapitalize="none"
+        numberOfLines={1}
+        placeholderTextColor="gray"
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    Input: {
-
-        backgroundColor: Colors.white,
-        elevation: 3,
-        borderRadius: 10,
-        padding: 10,
-    },
-    text: {
-        paddingLeft: 15,
-        color: Colors.black,
-        fontSize: font.h3,
-        fontWeight: '700',
-        letterSpacing: 1
-    },
-    textinput: {
-        color: Colors.black,
-        marginVertical: 5,
-        marginHorizontal: 5,
-        fontSize: font.h3,
-        padding: 0,
-        paddingHorizontal: 10,
-        marginTop: 5
-    }
-})
+  Input: {
+    backgroundColor: Colors.white,
+    elevation: 10,
+    borderRadius: 10,
+    padding: 5,
+  },
+  text: {
+    paddingHorizontal: 15,
+    color: Colors.black,
+    fontSize: FONTS.des,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  textinput: {
+    color: Colors.black,
+    marginHorizontal: 5,
+    fontSize: FONTS.des,
+    padding: 0,
+    paddingHorizontal: 10,
+  },
+});

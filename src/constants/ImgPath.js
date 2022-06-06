@@ -32,4 +32,7 @@ export default {
   farmerCall: require('../assets/farmerCall.jpg'),
   Admin: require('../assets/profile.png'),
   faq: require('../assets/question.png'),
+  forwardArrow: require('../assets/forwardArrow.png'),
+  delete: require('../assets/bin.png'),
+  edit: require('../assets/edit.png'),
 };

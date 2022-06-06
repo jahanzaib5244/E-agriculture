@@ -1,40 +1,53 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 import Header from '../../component/Header';
 import {styles} from './styles';
 import ImgPath from '../../constants/ImgPath';
+import {useDispatch, useSelector} from 'react-redux';
+import NavStrings from '../../constants/NavStrings';
+import {dologout} from '../../Store/actions/AuthActions';
 
-export default function Setting() {
+export default function Setting({navigation}) {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.AuthReducer.userData);
+  const ctaLogout = () => {
+    dispatch(dologout());
+  };
   return (
     <View style={styles.root}>
       <Header />
       <View style={styles.header}>
         <View style={styles.pic}>
-          <Image source={ImgPath.Admin} style={styles.Image} />
+          <Image source={{uri: user?.ProfilePic}} style={styles.Image} />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.username}>jahanzaib zaib</Text>
-          <Text style={styles.email}>zaibmsf333@gmail.com</Text>
+          <Text style={styles.username}>
+            {user?.FirstName}
+            {'\n'}
+            {user?.LastName}
+          </Text>
+          <Text style={styles.email}>{user?.Email}</Text>
         </View>
       </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnTxt}>Update Profile</Text>
-      </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnTxt}>Update Password</Text>
-      </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnTxt}>Share App</Text>
-      </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnTxt}>Rate App</Text>
-      </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnTxt}>Privacy Policy</Text>
-      </View>
-      <View style={styles.btn}>
-        <Text style={styles.btnTxt}>Refund Policy Profile</Text>
+      <View style={styles.buttonContainer}>
+        <View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AccountSetting')}
+            style={styles.btn}>
+            <Text style={styles.btnTxt}>Update Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('UpdatePassword')}
+            style={styles.btn}>
+            <Text style={styles.btnTxt}>Update Password</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          onPress={() => ctaLogout()}
+          style={[styles.btn, {borderTopWidth: 0.6}]}>
+          <Text style={styles.btnTxt}>Sing Out</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

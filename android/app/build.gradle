@@ -138,6 +138,14 @@ android {
         versionCode 1
         versionName "1.0"
     }
+     signingConfigs {
+    release {
+      storeFile file('release.keystore')
+      storePassword 'zaib5244'
+      keyAlias "your_key_alias"
+      keyPassword 'zaib5244'
+    }
+  }
     splits {
         abi {
             reset()
@@ -167,6 +175,7 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

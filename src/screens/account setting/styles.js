@@ -1,51 +1,50 @@
-import { StyleSheet } from 'react-native';
-import { Colors, font, size } from '../../config/Utils';
+import {StyleSheet} from 'react-native';
+import {moderateScale, moderateVerticalScale} from 'react-native-size-matters';
+import {Colors, font, size} from '../../config/Utils';
+import COLORS from '../../style/COLORS';
+import FONTS from '../../style/FONTS';
 
-
-export const AccountSettingStyle = StyleSheet.create({
+export const styles = StyleSheet.create({
   root: {
-    flexGrow: 1,
-    backgroundColor: Colors.primary
+    flex: 1,
+    backgroundColor: COLORS.primary,
   },
   uppercontainer: {
-    flex: 2,
-    minHeight: size.height20,
-    alignItems: 'center',
-    justifyContent: 'center'
+    flex: 0.2,
 
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   InputFieldContainer: {
-    flex: 8,
+    flex: 0.8,
     elevation: 4,
-    minHeight: size.height70,
     backgroundColor: Colors.white,
-    borderTopLeftRadius: 80
+    borderTopLeftRadius: 80,
   },
   image: {
-
+    backgroundColor: COLORS.white,
     height: 120,
     width: 120,
     borderRadius: 120 / 2,
     resizeMode: 'cover',
-
   },
   imageBtn: {
     height: 120,
     width: 120,
     borderRadius: 120 / 2,
-   elevation:4,
-   justifyContent:'center',
-   alignItems:'center'
+    elevation: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   btn: {
     marginHorizontal: 30,
-    marginVertical: 20
+    marginVertical: 20,
   },
   error: {
     color: Colors.danger,
     paddingLeft: 30,
-    marginTop: 0
+    marginTop: 0,
   },
   commandButton: {
     padding: 15,
@@ -59,7 +58,7 @@ export const AccountSettingStyle = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingTop: 20,
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowRadius: 5,
     shadowOpacity: 0.4,
     elevation: 3,
@@ -67,7 +66,7 @@ export const AccountSettingStyle = StyleSheet.create({
   header: {
     backgroundColor: '#FFFFFF',
     shadowColor: '#333333',
-    shadowOffset: { width: -1, height: -3 },
+    shadowOffset: {width: -1, height: -3},
     shadowRadius: 2,
     shadowOpacity: 0.4,
     // elevation: 5,
@@ -88,7 +87,7 @@ export const AccountSettingStyle = StyleSheet.create({
   panelTitle: {
     fontSize: 27,
     height: 35,
-    color:'gray'
+    color: 'gray',
   },
   panelSubtitle: {
     fontSize: 14,
@@ -136,5 +135,57 @@ export const AccountSettingStyle = StyleSheet.create({
   inputfields: {
     marginHorizontal: 20,
     marginTop: 10,
-  }
-})
+  },
+  bottomSheet: {
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: moderateScale(20),
+    borderTopRightRadius: moderateScale(20),
+    paddingTop: moderateVerticalScale(20),
+  },
+  sheetBtn: {
+    height: moderateVerticalScale(40),
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    width: '90%',
+    backgroundColor: 'black',
+    marginTop: moderateVerticalScale(5),
+    borderRadius: moderateScale(15),
+  },
+  sheetText: {
+    fontSize: FONTS.heading,
+    color: COLORS.white,
+    textAlign: 'center',
+  },
+  bottomPic: {
+    tintColor: COLORS.white,
+    marginHorizontal: moderateScale(10),
+    height: moderateScale(20),
+    width: moderateScale(20),
+  },
+  sheetImgWrapper: {
+    width: '40%',
+    alignItems: 'flex-end',
+  },
+  bottomTitle: {
+    fontSize: FONTS.medium,
+    color: COLORS.black,
+    marginBottom: moderateVerticalScale(5),
+  },
+  bottomDes: {
+    fontSize: FONTS.heading,
+    marginBottom: moderateVerticalScale(4),
+    color: COLORS.black,
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+});

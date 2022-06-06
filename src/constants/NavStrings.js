@@ -10,4 +10,11 @@ export default {
   Videos: 'Videos',
   SoilTesting: 'SoilTesting',
   CropPractices: 'CropPractices',
+  CropDetail: 'CropDetail',
+  AddCrop: 'AddCrop',
+  AddProduct: 'AddProduct',
+  AddPrice: 'AddPrice',
+  AllProducts: 'AllProducts',
+  AllCrops: 'AllCrops',
+  AllPrices: 'AllPrices',
 };
