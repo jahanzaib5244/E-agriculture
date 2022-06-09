@@ -16,3 +16,6 @@ export {default as AddPrice} from './addPrice/AddPrice';
 export {default as AllProducts} from './allproducts/AllProducts';
 export {default as AllPrices} from './allPrices/AllPrices';
 export {default as AllCrops} from './allCrops/AllCrops';
+export {default as SaleHistory} from './salehistory/SaleHistory';
+export {default as PurchaseHistory} from './purchaseHistory/PurchaseHistory';
+export {default as Cart} from './cart/Cart';

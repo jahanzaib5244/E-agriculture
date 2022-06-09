@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
   Image: {
     height: moderateVerticalScale(100),
     width: moderateVerticalScale(100),
+    borderRadius: moderateScale(50),
   },
   username: {
     fontSize: 23,

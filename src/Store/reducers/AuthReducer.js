@@ -2,6 +2,7 @@ import {
   ALLCROPS,
   ALLPRICE,
   ALLPRODUCTS,
+  CHATROOMS,
   LOGIN,
   LOGOUT,
   USERDATA,
@@ -15,6 +16,7 @@ const initialState = {
   AllProducts: [],
   AllPrices: [],
   AllCrops: [],
+  chatRooms: [],
 };
 
 export default function AuthReducer(state = initialState, action) {
@@ -55,6 +57,12 @@ export default function AuthReducer(state = initialState, action) {
       return {
         ...state,
         AllCrops: action.payload,
+      };
+    }
+    case CHATROOMS: {
+      return {
+        ...state,
+        chatRooms: action.payload,
       };
     }
 

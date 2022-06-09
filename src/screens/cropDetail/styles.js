@@ -32,5 +32,6 @@ export const styles = StyleSheet.create({
     fontSize: FONTS.heading,
     fontWeight: '700',
     textTransform: 'capitalize',
+    color: COLORS.black,
   },
 });

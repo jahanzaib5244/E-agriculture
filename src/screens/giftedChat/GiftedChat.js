@@ -13,47 +13,26 @@ import moment from 'moment';
 export default function Giftedha({route}) {
   const {item} = route.params;
 
-  const sender = useSelector(state => state.MainReducer.userData);
-  const userUid = auth().currentUser.uid;
+  const sender = useSelector(state => state.AuthReducer.userData);
+  const senderuid = auth().currentUser.uid;
   const [message, setmessage] = useState([]);
+  const chatroomid =
+    item.uid > senderuid
+      ? item.uid + '-' + senderuid
+      : senderuid + '-' + item.uid;
 
   useEffect(() => {
     // load old messages
-    const chatroomid =
-      item.uid > userUid ? item.uid + '-' + userUid : userUid + '-' + item.uid;
-    const loadData = async () => {
-      await firestore().collection('chatrooms').doc(chatroomid).get();
-      await db()
-        .ref(`chatrooms/${chatroomid}`)
-        .once('value', snapshot => {
-          if (snapshot.exists()) {
-            if (!!snapshot.val().messages) {
-              setmessage(renderMessages(snapshot.val().messages));
-            } else {
-              setmessage([]);
-            }
-          } else {
-            setmessage([]);
-          }
-        });
-    };
-    loadData();
-
-    const onValueChange = db()
-      .ref(`chatrooms/${chatroomid}`)
-      .on('value', snapshot => {
-        if (snapshot.exists()) {
-          if (snapshot.child('messages').exists()) {
-            setmessage(renderMessages(snapshot.val().messages));
-          } else {
-            setmessage([]);
-          }
-        } else {
-          setmessage([]);
+    const chatroom = firestore()
+      .collection('chatrooms')
+      .doc(chatroomid)
+      .onSnapshot(snapshot => {
+        if (snapshot.exists) {
+          setmessage(renderMessages(snapshot.data()?.messages));
         }
       });
-    return () =>
-      db().ref(`chatrooms/${chatroomid}`).off('value', onValueChange);
+
+    return () => chatroom();
   }, []);
 
   const renderMessages = useCallback(
@@ -66,59 +45,42 @@ export default function Giftedha({route}) {
             _id: index,
             createdAt: msg.messageTime,
             user: {
-              _id: msg.sender === userUid ? userUid : item.uid,
+              _id: msg.sender === senderuid ? senderuid : item.uid,
               avatar:
-                msg.sender === userUid ? userData.ImagePath : item.ImagePath,
-              name: msg.sender === userUid ? userData.fullname : item.fullname,
+                msg.sender === senderuid ? sender.ProfilePic : item.ProfilePic,
+              name:
+                msg.sender === senderuid ? sender.FirstName : item.FirstName,
             },
           }))
         : [];
     },
-    [userData.ImagePath, userData.fullname, item.ImagePath, item.fullname],
+    [sender.ProfilePic, sender.fullname, item.ProfilePic, item.fullname],
   );
 
   const onSend = useCallback(async (msg = []) => {
-    // fetch messages from server
-
-    const chatroomid =
-      item.uid > userUid ? item.uid + '-' + userUid : userUid + '-' + item.uid;
-
-    await db()
-      .ref(`chatrooms/${chatroomid}`)
-      .once('value', async snapshot => {
-        const lastMessages = snapshot.child('messages').exists()
-          ? snapshot.val().messages
-          : [];
-        const TimeStamp = moment.now();
-
-        const res = await db()
-          .ref(`chatrooms/${chatroomid}`)
-          .update({
-            lastMessages: msg[0].text,
-            lastMessageTime: `${TimeStamp}`,
-            firstUser: userData.fullname,
-            item,
-            userData,
-            seconduser: item.fullname,
-            senderCheckTime: `${TimeStamp}`,
-            receiverCheckTIme: `${TimeStamp}`,
-            receiverstatus: item.online,
-            senderstatus: userData.online,
-            messages: [
-              ...lastMessages,
-              {
-                messageTime: `${TimeStamp}`,
-                text: msg[0].text,
-                sender: userUid,
-              },
-            ],
-          });
+    const TimeStamp = moment.now();
+    await firestore()
+      .collection('chatrooms')
+      .doc(chatroomid)
+      .update({
+        lastMessages: msg[0].text,
+        lastMessageTime: `${TimeStamp}`,
+        firstuid: sender.uid,
+        seconduid: item.uid,
+        messages: firestore.FieldValue.arrayUnion({
+          messageTime: `${TimeStamp}`,
+          text: msg[0].text,
+          sender: senderuid,
+        }),
       });
   }, []);
 
   return (
-    <ImageBackground source={ImagePath.background} style={styles.root}>
-      <ChatScreenHeader name={item?.fullname} image={item?.ImagePath} />
+    <View style={styles.root}>
+      <ChatScreenHeader
+        name={`${item?.FirstName} ${item?.LastName}`}
+        image={item?.ProfilePic}
+      />
       <GiftedChat
         textInputStyle={styles.textInput}
         showAvatarForEveryMessage={true}
@@ -134,9 +96,9 @@ export default function Giftedha({route}) {
         messages={message}
         onSend={text => onSend(text)}
         user={{
-          _id: userUid,
+          _id: senderuid,
         }}
       />
-    </ImageBackground>
+    </View>
   );
 }

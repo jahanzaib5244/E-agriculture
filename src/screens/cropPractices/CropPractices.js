@@ -11,9 +11,21 @@ import React, {useState} from 'react';
 import {styles} from './styles';
 import ImgPath from '../../constants/ImgPath';
 import NavStrings from '../../constants/NavStrings';
+import {useSelector} from 'react-redux';
 
 export default function CropPractices({navigation}) {
   const [searchTxt, setsearchTxt] = useState('');
+  const Crops = useSelector(state => state.AuthReducer.AllCrops);
+  const [filtered, setfiltered] = useState(Crops);
+
+  const filter = () => {
+    const filtredItems = Crops.filter(item => {
+      const text = searchTxt.toUpperCase();
+      const name = (item?.name).toUpperCase();
+      return name.indexOf(text) > -1;
+    });
+    setfiltered(filtredItems);
+  };
 
   return (
     <View style={styles.root}>
@@ -25,12 +37,12 @@ export default function CropPractices({navigation}) {
             style={styles.searchInput}
           />
         </View>
-        <TouchableOpacity style={styles.searchBtn}>
+        <TouchableOpacity style={styles.searchBtn} onPress={() => filter()}>
           <Text style={styles.searchBtnTxt}>FIlter</Text>
         </TouchableOpacity>
       </View>
       <FlatList
-        data={Array.from(Array(10).keys())}
+        data={filtered}
         numColumns={2}
         contentContainerStyle={{
           flexGrow: 1,
@@ -41,9 +53,11 @@ export default function CropPractices({navigation}) {
           return (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => navigation.navigate(NavStrings.CropDetail)}>
-              <Image source={ImgPath.banner1} style={styles.cardImgae} />
-              <Text style={styles.cardTxt}>donate</Text>
+              onPress={() =>
+                navigation.navigate(NavStrings.CropDetail, {crop: item})
+              }>
+              <Image source={{uri: item?.image}} style={styles.cardImgae} />
+              <Text style={styles.cardTxt}>{item?.name}</Text>
             </TouchableOpacity>
           );
         }}

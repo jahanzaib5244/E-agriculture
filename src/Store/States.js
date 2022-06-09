@@ -5,3 +5,4 @@ export const WEATHER = 'WEATHER';
 export const ALLPRICE = 'ALLPRICE';
 export const ALLPRODUCTS = 'ALLPRODUCTS';
 export const ALLCROPS = 'ALLCROPS';
+export const CHATROOMS = 'CHATROOMS';

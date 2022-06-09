@@ -13,26 +13,61 @@ import FONTS from '../style/FONTS';
 import COLORS from '../style/COLORS';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import moment from 'moment';
 
-const ProductCard = ({item = {}, index = 0}) => {
+const CartItem = ({item = {}, index = 0}) => {
+  console.log(item);
   const [loading, setloading] = useState(false);
+  const [quanity, setquanity] = useState(1);
 
-  const AddToCart = async () => {
+  const quanityAdd = () => {
+    setquanity(quanity + 1);
+  };
+  const quanityReduce = () => {
+    if (quanity <= 1) {
+      return null;
+    } else {
+      setquanity(quanity - 1);
+    }
+  };
+
+  const deleteItem = async () => {
     try {
+      await firestore().collection('cart').doc(item?.id).delete();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const buy = async () => {
+    try {
+      setloading(true);
       const uid = auth().currentUser.uid;
       setloading(true);
-      const alreadyExists = await firestore()
-        .collection('cart')
-        .doc(`${uid}-${item?.id}`)
-        .get();
-      if (!alreadyExists.exists) {
-        await firestore()
-          .collection('cart')
-          .doc(`${uid}-${item?.id}`)
-          .set(item);
-      } else {
-        return null;
-      }
+      const random = Math.random()
+        .toString(36)
+        .substring(2, 8 + 2);
+      const timeStamp = moment.now();
+      await firestore()
+        .collection('purchase')
+        .doc(`${uid}-${random}`)
+        .set({
+          ...item,
+          quanity,
+          tottalPrice: quanity * item?.dicountPrice,
+          purchaseAt: timeStamp,
+          id: `${uid}-${random}`,
+        });
+      await firestore()
+        .collection('sale')
+        .add({
+          ...item,
+          quanity,
+          tottalPrice: quanity * item?.dicountPrice,
+          purchaseAt: timeStamp,
+        });
+      setloading(false);
+      deleteItem();
     } catch (error) {
       console.log(error);
     } finally {
@@ -52,9 +87,7 @@ const ProductCard = ({item = {}, index = 0}) => {
           </View>
           <View style={styles.likeContainer}>
             <Image source={ImgPath.heart} style={styles.heartImg} />
-            <Text style={styles.likesText}>
-              {Math.floor(Math.random() * 100) + 1} Likes
-            </Text>
+            <Text style={styles.likesText}>{item?.percentage} Likes</Text>
           </View>
         </View>
         <View style={styles.priceContainer}>
@@ -69,46 +102,97 @@ const ProductCard = ({item = {}, index = 0}) => {
             <Text style={styles.youSaveTxt}>
               You save RS {item?.savePrice}.00
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: moderateScale(6),
-              }}>
-              <View
-                style={[
-                  styles.productBtn,
-                  {
-                    marginRight: moderateScale(5),
-                    backgroundColor: 'transparent',
-                  },
-                ]}>
-                <Image
-                  source={ImgPath.wishlist}
-                  style={[styles.addImage, {tintColor: 'black', flex: 1}]}
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => AddToCart()}
-                style={styles.productBtn}>
-                {loading ? (
-                  <ActivityIndicator color={COLORS.white} size={14} />
-                ) : (
-                  <Image source={ImgPath.Add} style={styles.addImage} />
-                )}
-              </TouchableOpacity>
-            </View>
           </View>
+        </View>
+        <View style={styles.QuanityBtn}>
+          <TouchableOpacity
+            onPress={() => quanityReduce()}
+            style={styles.addBtn}>
+            <Image source={ImgPath.minus} style={styles.quanityBtnImg} />
+          </TouchableOpacity>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={styles.quanityTxt}>{quanity}</Text>
+          </View>
+          <TouchableOpacity onPress={() => quanityAdd()} style={styles.addBtn}>
+            <Image source={ImgPath.Add} style={styles.quanityBtnImg} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.actionBtn}>
+          <TouchableOpacity onPress={() => deleteItem()} style={styles.delBtn}>
+            <Text style={styles.btnTxt}>Delete</Text>
+            <Image source={ImgPath.delete} style={styles.actionImg} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => buy()} style={styles.delBtn}>
+            <Text style={styles.btnTxt}>Buy</Text>
+            {loading ? (
+              <ActivityIndicator size={14} color={COLORS.white} />
+            ) : (
+              <Image source={ImgPath.buy} style={styles.actionImg} />
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
 
-export default ProductCard;
+export default CartItem;
 
 const styles = StyleSheet.create({
+  quanityTxt: {
+    color: COLORS.black,
+    fontSize: FONTS.heading,
+    fontWeight: '700',
+  },
+  addBtn: {
+    backgroundColor: COLORS.primary,
+    height: moderateScale(25),
+    width: moderateScale(25),
+    borderRadius: moderateScale(12.5),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  QuanityBtn: {
+    flexDirection: 'row',
+    marginBottom: moderateVerticalScale(10),
+    justifyContent: 'space-between',
+    width: '60%',
+    alignSelf: 'center',
+  },
+  quanityBtnImg: {
+    height: moderateScale(15),
+    width: moderateScale(15),
+    tintColor: COLORS.white,
+    resizeMode: 'contain',
+  },
+  actionBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  delBtn: {
+    paddingHorizontal: moderateScale(8),
+    paddingVertical: moderateScale(5),
+    flexDirection: 'row',
+    backgroundColor: COLORS.primary,
+    marginHorizontal: moderateScale(8),
+    marginBottom: moderateVerticalScale(10),
+    borderRadius: moderateScale(5),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnTxt: {
+    color: COLORS.white,
+    fontSize: FONTS.des,
+  },
+  actionImg: {
+    height: moderateScale(15),
+    width: moderateScale(15),
+    resizeMode: 'contain',
+    marginHorizontal: moderateScale(3),
+    tintColor: COLORS.white,
+  },
   card: {
-    height: moderateVerticalScale(210),
+    height: moderateVerticalScale(240),
     width: moderateScale(170),
     marginBottom: moderateVerticalScale(15),
     alignItems: 'flex-end',
@@ -116,7 +200,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     backgroundColor: '#EFF3F6',
-    height: moderateVerticalScale(158),
+    height: moderateVerticalScale(188),
     width: moderateScale(160),
     borderRadius: moderateScale(20),
   },
@@ -129,10 +213,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   priceContainer: {
-    flex: 0.4,
+    flex: 0.5,
   },
   btnContainer: {
-    flex: 1.1,
+    flex: 0.7,
   },
   productImg: {
     height: moderateScale(130),

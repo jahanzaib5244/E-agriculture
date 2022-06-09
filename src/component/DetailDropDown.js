@@ -8,10 +8,11 @@ import ImgPath from '../constants/ImgPath';
 const DetailDropDown = ({detail = '', title = '', index = 1}) => {
   const [show, setshow] = useState(false);
   return (
-    <View>
+    <View style={{paddingHorizontal: moderateScale(20)}}>
       <TouchableOpacity
         onPress={() => setshow(!show)}
         activeOpacity={0.9}
+        numberOfLines={1}
         style={styles.headerContainer}>
         <Text style={styles.headerTxt}>
           {index}. {title}
@@ -47,13 +48,14 @@ const styles = StyleSheet.create({
   },
   headerTxt: {
     fontSize: FONTS.dec,
-    paddingHorizontal: moderateScale(15),
+    paddingHorizontal: moderateScale(10),
     color: COLORS.black,
+    fontWeight: '700',
   },
   forwardImage: {
     height: moderateScale(15),
     width: moderateScale(15),
-    marginHorizontal: moderateScale(15),
+    marginHorizontal: moderateScale(10),
   },
   detailtxt: {
     fontSize: FONTS.dec,

@@ -5,62 +5,66 @@ import {styles} from './styles';
 import Header from '../../component/Header';
 import ProductCard from '../../component/ProductCard';
 import ImgPath from '../../constants/ImgPath';
+import {useSelector} from 'react-redux';
+import NavStrings from '../../constants/NavStrings';
+export default function Shop({navigation}) {
+  const AllProcuts = useSelector(state => state.AuthReducer.AllProducts);
+  const user = useSelector(state => state.AuthReducer.userData);
 
-export default function Shop() {
   return (
     <ScrollView contentContainerStyle={styles.root}>
       <Header />
       <View style={styles.category}>
-        <Text style={styles.recomemdedTxt}>Categories</Text>
+        <TouchableOpacity
+          style={styles.categoryBtn}
+          onPress={() => navigation.navigate(NavStrings.Cart)}>
+          <Image source={ImgPath.cart} style={styles.categoryBtnImg} />
+          <Text style={styles.CategoryTxt}>Cart</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.categoryBtn}
+          onPress={() =>
+            navigation.navigate(
+              user?.role == 'admin'
+                ? NavStrings.SaleHistory
+                : NavStrings.PurchaseHistory,
+            )
+          }>
+          <Image source={ImgPath.buy} style={styles.categoryBtnImg} />
+          <Text style={styles.CategoryTxt}>
+            {user?.role == 'admin' ? 'Sale' : 'Purchase'} History
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View>
+        <View style={styles.shopHeader}>
+          <Text style={styles.recomemdedTxt}>Top Selling Products</Text>
+        </View>
         <ScrollView horizontal>
-          <View style={styles.categoryBtn}>
-            <Image source={ImgPath.group} style={styles.categoryBtnImg} />
-            <Text style={styles.CategoryTxt}>All</Text>
-          </View>
-          <View style={styles.categoryBtn}>
-            <Image source={ImgPath.group} style={styles.categoryBtnImg} />
-            <Text style={styles.CategoryTxt}>Other</Text>
-          </View>
-          <View style={styles.categoryBtn}>
-            <Image source={ImgPath.group} style={styles.categoryBtnImg} />
-            <Text style={styles.CategoryTxt}>Crop Tonics</Text>
-          </View>
-          <View style={styles.categoryBtn}>
-            <Image source={ImgPath.group} style={styles.categoryBtnImg} />
-            <Text style={styles.CategoryTxt}>Fertilizer</Text>
-          </View>
-          <View style={styles.categoryBtn}>
-            <Image source={ImgPath.group} style={styles.categoryBtnImg} />
-            <Text style={styles.CategoryTxt}>Pesticide</Text>
-          </View>
-          <View style={styles.categoryBtn}>
-            <Image source={ImgPath.group} style={styles.categoryBtnImg} />
-            <Text style={styles.CategoryTxt}>Traps</Text>
-          </View>
+          {AllProcuts.map((item, index) => {
+            if (!(index >= 4)) {
+              return (
+                <View key={index} style={styles.item}>
+                  <ProductCard item={item} index={index} />
+                </View>
+              );
+            }
+          })}
         </ScrollView>
       </View>
       <View>
         <View style={styles.shopHeader}>
-          <Text style={styles.recomemdedTxt}>Top Selling Products</Text>
-          <TouchableOpacity>
-            <Text style={styles.viewAllTxt}>View All</Text>
-          </TouchableOpacity>
+          <Text style={styles.recomemdedTxt}>All Products</Text>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <ProductCard />
-          <ProductCard />
-        </View>
-      </View>
-      <View>
-        <View style={styles.shopHeader}>
-          <Text style={styles.recomemdedTxt}>Recommended Products</Text>
-          <TouchableOpacity>
-            <Text style={styles.viewAllTxt}>View All</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <ProductCard />
-          <ProductCard />
+        <View style={styles.container}>
+          {AllProcuts.map((item, index) => {
+            return (
+              <View key={index} style={styles.rowItem}>
+                <ProductCard item={item} index={index} />
+              </View>
+            );
+          })}
         </View>
       </View>
     </ScrollView>

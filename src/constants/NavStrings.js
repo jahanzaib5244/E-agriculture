@@ -17,4 +17,7 @@ export default {
   AllProducts: 'AllProducts',
   AllCrops: 'AllCrops',
   AllPrices: 'AllPrices',
+  SaleHistory: 'SaleHistory',
+  PurchaseHistory: 'PurchaseHistory',
+  Cart: 'Cart',
 };

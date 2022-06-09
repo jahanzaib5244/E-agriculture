@@ -15,10 +15,13 @@ import {
   AllCrops,
   AllPrices,
   AllProducts,
+  Cart,
   CropDetail,
   CropPractices,
   GiftedChat,
   MarketPrice,
+  PurchaseHistory,
+  SaleHistory,
   SoilTesting,
   Videos,
 } from '../screens';
@@ -29,6 +32,7 @@ import {
   getAllPrices,
   getAllProducts,
 } from '../Store/actions/AddProduct';
+import {getAllChatrooms} from '../Store/actions/chatAction';
 
 export default function StackNavigation() {
   const dispatch = useDispatch();
@@ -39,6 +43,7 @@ export default function StackNavigation() {
     dispatch(getAllCrops());
     dispatch(getAllProducts());
     dispatch(getAllPrices());
+    dispatch(getAllChatrooms());
     return () => {};
   }, []);
 
@@ -110,7 +115,7 @@ export default function StackNavigation() {
       />
       <Stack.Screen
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitleAlign: 'center',
           title: 'Admin',
         }}
@@ -125,6 +130,33 @@ export default function StackNavigation() {
         }}
         name={NavStrings.AddCrop}
         component={AddCrop}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Purchase History',
+        }}
+        name={NavStrings.PurchaseHistory}
+        component={PurchaseHistory}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Sale History',
+        }}
+        name={NavStrings.SaleHistory}
+        component={SaleHistory}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Cart',
+        }}
+        name={NavStrings.Cart}
+        component={Cart}
       />
       <Stack.Screen
         options={{headerShown: true, headerTitleAlign: 'center'}}

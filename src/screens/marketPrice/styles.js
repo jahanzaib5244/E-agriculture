@@ -9,11 +9,13 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   searchContainer: {
-    height: moderateVerticalScale(35),
+    height: moderateVerticalScale(70),
     marginTop: moderateScale(15),
+    width: '100%',
 
     marginHorizontal: moderateScale(20),
     flexDirection: 'row',
+    marginBottom: moderateVerticalScale(10),
   },
   searchInput: {
     flex: 1,
@@ -34,6 +36,7 @@ export const styles = StyleSheet.create({
     borderWidth: moderateScale(1),
     borderRadius: moderateScale(15),
     flex: 1,
+    marginTop: moderateVerticalScale(5),
   },
   searchBtn: {
     backgroundColor: COLORS.success,

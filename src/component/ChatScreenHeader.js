@@ -18,7 +18,7 @@ export default function ChatScreenHeader({image = '', name = ''}) {
         activeOpacity={0.7}
         onPress={() => navigation.goBack()}
         style={styles.Backbtn}>
-        <Image style={styles.BackImage} source={ImgPath.icBakc} />
+        <Image style={styles.BackImage} source={ImgPath.back} />
       </TouchableOpacity>
       <View style={styles.userImageontainer}>
         <Image style={styles.userPic} source={{uri: image}} />

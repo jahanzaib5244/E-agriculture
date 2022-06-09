@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   Permission,
+  FlatList,
 } from 'react-native';
 import {moderateScale, moderateVerticalScale} from 'react-native-size-matters';
 import {SliderBox} from 'react-native-image-slider-box';
@@ -29,6 +30,7 @@ export default function Home({navigation}) {
   const role = useSelector(state => state.AuthReducer.role);
   const weather = useSelector(state => state.AuthReducer.weather);
   const [admin, setadmin] = useState(role == 'admin' ? true : false);
+  const products = useSelector(state => state.AuthReducer.AllProducts);
 
   const [lat, setlat] = useState('');
   const [lon, setlon] = useState('');
@@ -90,7 +92,7 @@ export default function Home({navigation}) {
     ImgPath.banner1,
   ];
   return (
-    <ScrollView contentContainerStyle={styles.root}>
+    <ScrollView contentContainerStyle={styles.root} nestedScrollEnabled={true}>
       <Header />
       {/* <View style={styles.AddNewContainer}>
         <View style={styles.addBtnContainer}>
@@ -172,14 +174,29 @@ export default function Home({navigation}) {
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
+
+            justifyContent: 'space-between',
             marginBottom: 10,
           }}>
+          <HomeButton
+            image={ImgPath.buy}
+            onPress={() =>
+              navigation.navigate(
+                admin ? NavStrings.SaleHistory : NavStrings.PurchaseHistory,
+              )
+            }
+            text={admin ? 'sale' : 'purchase'}
+          />
           <HomeButton
             image={ImgPath.weather}
             onPress={() => navigation.navigate(NavStrings)}
             text="Weather"
+          />
+
+          <HomeButton
+            image={ImgPath.cart}
+            onPress={() => navigation.navigate(NavStrings.Cart)}
+            text="cart"
           />
         </View>
       </View>
@@ -202,13 +219,16 @@ export default function Home({navigation}) {
             <Text style={styles.viewAllTxt}>View All</Text>
           </TouchableOpacity>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <ProductCard />
-          <ProductCard />
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <ProductCard />
-          <ProductCard />
+        <View style={styles.container}>
+          {products.map((item, index) => {
+            if (!(index >= 4)) {
+              return (
+                <View key={index} style={styles.item}>
+                  <ProductCard item={item} index={index} />
+                </View>
+              );
+            }
+          })}
         </View>
       </View>
       <Image source={ImgPath.farmerCall} style={styles.footerImage} />

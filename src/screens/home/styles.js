@@ -73,4 +73,15 @@ export const styles = StyleSheet.create({
     marginTop: moderateVerticalScale(10),
     marginBottom: moderateVerticalScale(30),
   },
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start', // if you want to fill rows left to right
+  },
+  item: {
+    width: '50%', // is 50% of container
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

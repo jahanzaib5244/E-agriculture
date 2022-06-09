@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   btnContainer: {
     height: moderateScale(45),

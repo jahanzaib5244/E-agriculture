@@ -4,22 +4,31 @@ import {styles} from './styles';
 import ImgPath from '../../constants/ImgPath';
 import DetailDropDown from '../../component/DetailDropDown';
 
-export default function CropDetail() {
+export default function CropDetail({navigation, route}) {
+  const crop = route.params?.crop;
+
   return (
     <View style={styles.root}>
-      <Image style={styles.backgroundImage} source={ImgPath.banner3} />
+      <Image style={styles.backgroundImage} source={{uri: crop?.image}} />
       <View style={styles.emptyContainer} />
       <View style={styles.detailContainer}>
         <FlatList
-          data={Array.from(Array(10).keys())}
+          data={crop?.description}
           keyExtractor={(item, index) => index.toString()}
           ListHeaderComponent={() => (
             <View style={styles.flatlistHeader}>
-              <Text style={styles.headerTxt}>crop name</Text>
+              <Text style={styles.headerTxt}>{crop?.name}</Text>
             </View>
           )}
           renderItem={({item, index}) => {
-            return <DetailDropDown index={index + 1} />;
+            console.log(item);
+            return (
+              <DetailDropDown
+                index={index + 1}
+                title={item?.title}
+                detail={item?.des}
+              />
+            );
           }}
         />
       </View>

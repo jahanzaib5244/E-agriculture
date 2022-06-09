@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   searchContainer: {
     height: moderateVerticalScale(35),
     marginTop: moderateScale(15),
-
+    marginBottom: moderateVerticalScale(10),
     marginHorizontal: moderateScale(20),
     flexDirection: 'row',
   },
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: FONTS.des,
     paddingHorizontal: moderateScale(10),
-    marginTop: moderateScale(3),
+    marginTop: moderateScale(5),
     fontSize: FONTS.des,
     textTransform: 'capitalize',
   },
