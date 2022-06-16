@@ -20,4 +20,5 @@ export default {
   SaleHistory: 'SaleHistory',
   PurchaseHistory: 'PurchaseHistory',
   Cart: 'Cart',
+  SelectLanguage: 'SelectLanguage',
 };

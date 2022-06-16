@@ -8,7 +8,9 @@ import Input from '../../component/Input';
 import Passwordinput from '../../component/PasswordInput';
 
 import {LoginStyle} from './LoginStyle';
+import strings from '../../constants/language/LocalizedString';
 import Uselogin from './Uselogin';
+import {suppressDeprecationWarnings} from 'moment';
 
 const validationschema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
@@ -28,7 +30,7 @@ export default function Login({navigation}) {
         <Text style={LoginStyle.logoText}>E Agriculture</Text>
       </View>
       <View style={LoginStyle.input}>
-        <Text style={LoginStyle.loginText}>Login</Text>
+        <Text style={LoginStyle.loginText}>{strings.Login}</Text>
         <Formik
           initialValues={{email: '', password: ''}}
           validationSchema={validationschema}
@@ -38,8 +40,8 @@ export default function Login({navigation}) {
               <Input
                 onchange={handleChange('email')}
                 inputstyle={LoginStyle.inputfield}
-                placeholder="Enter Your Email..."
-                name="Email"
+                placeholder={strings.enterEmail}
+                name={strings.Email}
                 blur={() => setFieldTouched('email')}
               />
               {errors.email && touched.email ? (
@@ -47,8 +49,8 @@ export default function Login({navigation}) {
               ) : null}
               <Passwordinput
                 inputstyle={LoginStyle.inputfield}
-                placeholder="Enter Your Password..."
-                name="Password"
+                placeholder={strings.enterPassword}
+                name={strings.Password}
                 onchange={handleChange('password')}
                 blur={() => setFieldTouched('password')}
               />
@@ -62,12 +64,14 @@ export default function Login({navigation}) {
                 <TouchableOpacity
                   style={LoginStyle.forgetBtn}
                   onPress={() => navigation.navigate('ForgetPassword')}>
-                  <Text style={LoginStyle.forgettext}>Forget Password ?</Text>
+                  <Text style={LoginStyle.forgettext}>
+                    {strings.forgetPassword}
+                  </Text>
                 </TouchableOpacity>
               </View>
 
               <AppButton
-                name="Log In"
+                name={strings.Login}
                 BTstyle={LoginStyle.btn}
                 onPress={handleSubmit}
                 loading={loading}
@@ -78,8 +82,9 @@ export default function Login({navigation}) {
         <View
           style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
           <View style={{flexDirection: 'row', bottom: 20}}>
-            <Text style={{paddingVertical: 10, color: 'gray'}}>
-              Don't have any account?{' '}
+            <Text
+              style={{paddingVertical: 10, color: 'gray', textAlign: 'left'}}>
+              {strings.noAccount}
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Singup')}
@@ -88,7 +93,14 @@ export default function Login({navigation}) {
                 alignItems: 'center',
                 paddingHorizontal: 5,
               }}>
-              <Text style={{borderBottomWidth: 1, color: 'black'}}>Signup</Text>
+              <Text
+                style={{
+                  borderBottomWidth: 1,
+                  color: 'black',
+                  textAlign: 'left',
+                }}>
+                {strings.Singup}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

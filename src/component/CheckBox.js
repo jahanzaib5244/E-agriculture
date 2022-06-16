@@ -5,6 +5,7 @@ import {moderateScale, moderateVerticalScale} from 'react-native-size-matters';
 import ImgPath from '../constants/ImgPath';
 import COLORS from '../style/COLORS';
 import FONTS from '../style/FONTS';
+import strings from '../constants/language/LocalizedString';
 
 const CheckBox = ({selectedValue = () => {}, value = []}) => {
   const [CheckBoxselection, setCheckBoxselection] = useState([]);
@@ -26,7 +27,7 @@ const CheckBox = ({selectedValue = () => {}, value = []}) => {
 
   return (
     <View style={styles.root}>
-      <Text style={[styles.heading]}>Select Parameter</Text>
+      <Text style={[styles.heading]}>{strings.selectParameter}</Text>
 
       <View
         style={{

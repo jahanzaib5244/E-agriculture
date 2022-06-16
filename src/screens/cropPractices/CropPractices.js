@@ -12,6 +12,8 @@ import {styles} from './styles';
 import ImgPath from '../../constants/ImgPath';
 import NavStrings from '../../constants/NavStrings';
 import {useSelector} from 'react-redux';
+import strings from '../../constants/language/LocalizedString';
+import COLORS from '../../style/COLORS';
 
 export default function CropPractices({navigation}) {
   const [searchTxt, setsearchTxt] = useState('');
@@ -35,10 +37,12 @@ export default function CropPractices({navigation}) {
           <TextInput
             onChangeText={v => setsearchTxt(v)}
             style={styles.searchInput}
+            placeholder={strings.name}
+            placeholderTextColor={COLORS.lightBlack}
           />
         </View>
         <TouchableOpacity style={styles.searchBtn} onPress={() => filter()}>
-          <Text style={styles.searchBtnTxt}>FIlter</Text>
+          <Text style={styles.searchBtnTxt}>{strings.filter}</Text>
         </TouchableOpacity>
       </View>
       <FlatList

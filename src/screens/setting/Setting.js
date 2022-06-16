@@ -7,6 +7,7 @@ import ImgPath from '../../constants/ImgPath';
 import {useDispatch, useSelector} from 'react-redux';
 import NavStrings from '../../constants/NavStrings';
 import {dologout} from '../../Store/actions/AuthActions';
+import strings from '../../constants/language/LocalizedString';
 
 export default function Setting({navigation}) {
   const dispatch = useDispatch();
@@ -35,18 +36,23 @@ export default function Setting({navigation}) {
           <TouchableOpacity
             onPress={() => navigation.navigate('AccountSetting')}
             style={styles.btn}>
-            <Text style={styles.btnTxt}>Update Profile</Text>
+            <Text style={styles.btnTxt}>{strings.updateprofile}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate('UpdatePassword')}
             style={styles.btn}>
-            <Text style={styles.btnTxt}>Update Password</Text>
+            <Text style={styles.btnTxt}>{strings.updatePassword}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(NavStrings.SelectLanguage)}
+            style={styles.btn}>
+            <Text style={styles.btnTxt}>{strings.language}</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
           onPress={() => ctaLogout()}
           style={[styles.btn, {borderTopWidth: 0.6}]}>
-          <Text style={styles.btnTxt}>Sing Out</Text>
+          <Text style={styles.btnTxt}>{strings.signout}</Text>
         </TouchableOpacity>
       </View>
     </View>

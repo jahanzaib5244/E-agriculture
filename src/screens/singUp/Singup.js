@@ -11,6 +11,7 @@ import Passwordinput from '../../component/PasswordInput';
 import AppButton, {LoadingButton} from '../../component/AppButton';
 import {RegisterApi} from '../../Store/actions/AuthActions';
 import COLORS from '../../style/COLORS';
+import strings from '../../constants/language/LocalizedString';
 
 const validationschema = Yup.object().shape({
   Email: Yup.string().required().email().label('Email'),
@@ -63,7 +64,7 @@ export default function Singup({navigation}) {
             source={require('../../assets/back.png')}
           />
         </TouchableOpacity>
-        <Text style={SingupStyle.singupText}>Sign up</Text>
+        <Text style={SingupStyle.singupText}>{strings.Singup}</Text>
       </View>
 
       <Formik
@@ -85,17 +86,17 @@ export default function Singup({navigation}) {
                   <Input
                     onchange={handleChange('firstName')}
                     inputstyle={SingupStyle.fname}
-                    name="First Name"
-                    placeholder="First Name..."
+                    name={strings.firstName}
+                    placeholder={strings.enterFirstname}
                     blur={() => setFieldTouched('firstName')}
                   />
 
                   <Input
                     onchange={handleChange('lastName')}
                     inputstyle={SingupStyle.lname}
-                    name="Last Name"
+                    name={strings.lastName}
                     blur={() => setFieldTouched('lastName')}
-                    placeholder="Last Name..."
+                    placeholder={strings.enterLastName}
                   />
                 </View>
                 {touched.firstName && errors.firstName ? (
@@ -108,9 +109,9 @@ export default function Singup({navigation}) {
                 <Input
                   onchange={handleChange('userName')}
                   inputstyle={SingupStyle.email}
-                  name="User Name"
+                  name={strings.userName}
                   blur={() => setFieldTouched('userName')}
-                  placeholder="User Name..."
+                  placeholder={strings.enterUserName}
                 />
 
                 {touched.userName && errors.userName ? (
@@ -119,9 +120,9 @@ export default function Singup({navigation}) {
                 <Input
                   onchange={handleChange('Email')}
                   inputstyle={SingupStyle.email}
-                  name="Email"
+                  name={strings.Email}
                   blur={() => setFieldTouched('Email')}
-                  placeholder="Email..."
+                  placeholder={strings.enterEmail}
                 />
                 {touched.Email && errors.Email ? (
                   <Text style={SingupStyle.error}>{errors.Email}</Text>
@@ -130,17 +131,17 @@ export default function Singup({navigation}) {
                 <Passwordinput
                   onchange={handleChange('Password')}
                   inputstyle={SingupStyle.email}
-                  name="Password"
+                  name={strings.Password}
                   blur={() => setFieldTouched('Password')}
-                  placeholder="Password..."
+                  placeholder={strings.enterPassword}
                 />
                 {/* {!!touched.Password && <Text style={SingupStyle.error}>{errors.Password}</Text>} */}
                 <Passwordinput
                   onchange={handleChange('ConfirmPassword')}
                   inputstyle={SingupStyle.email}
-                  name="Confirm Password"
+                  name={strings.Password}
                   blur={() => setFieldTouched('ConfirmPassword')}
-                  placeholder="Confirm Pass..."
+                  placeholder={strings.enterPassword}
                 />
 
                 {touched.ConfirmPassword && errors.ConfirmPassword ? (
@@ -156,7 +157,7 @@ export default function Singup({navigation}) {
 
                 <AppButton
                   onPress={handleSubmit}
-                  name="Sign up"
+                  name={strings.Singup}
                   BTstyle={SingupStyle.btn}
                   loading={loading}
                 />
@@ -170,7 +171,7 @@ export default function Singup({navigation}) {
                 }}>
                 <View style={{flexDirection: 'row', bottom: 20}}>
                   <Text style={{paddingVertical: 10, color: 'gray'}}>
-                    Already have an account ?
+                    {strings.alreadyAccount}
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Login')}
@@ -181,7 +182,7 @@ export default function Singup({navigation}) {
                       paddingHorizontal: 5,
                     }}>
                     <Text style={{borderBottomWidth: 1, color: 'black'}}>
-                      Login
+                      {strings.Login}
                     </Text>
                   </TouchableOpacity>
                 </View>

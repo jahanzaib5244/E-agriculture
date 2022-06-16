@@ -31,22 +31,27 @@ export const styles = StyleSheet.create({
     fontSize: 23,
     color: COLORS.black,
     textTransform: 'capitalize',
+    paddingHorizontal: moderateScale(10),
+    textAlign: 'left',
   },
   email: {
     fontSize: 18,
     color: 'grey',
+    paddingHorizontal: moderateScale(10),
+    textAlign: 'left',
   },
   btn: {
     height: moderateVerticalScale(50),
     borderBottomWidth: 0.6,
     borderColor: '#dedede',
     justifyContent: 'center',
-    paddingLeft: moderateScale(30),
+    paddingHorizontal: moderateScale(30),
   },
   btnTxt: {
     color: COLORS.black,
     fontSize: FONTS.des,
     fontWeight: '600',
+    textAlign: 'left',
   },
   buttonContainer: {
     flex: 1,

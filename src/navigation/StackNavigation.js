@@ -22,6 +22,7 @@ import {
   MarketPrice,
   PurchaseHistory,
   SaleHistory,
+  SelectLanguage,
   SoilTesting,
   Videos,
 } from '../screens';
@@ -104,7 +105,11 @@ export default function StackNavigation() {
         component={MarketPrice}
       />
       <Stack.Screen
-        options={{headerShown: true, headerTitleAlign: 'center'}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          animationEnabled: false,
+        }}
         name={NavStrings.Videos}
         component={Videos}
       />
@@ -162,6 +167,11 @@ export default function StackNavigation() {
         options={{headerShown: true, headerTitleAlign: 'center'}}
         name="FeedBack"
         component={FeedBack}
+      />
+      <Stack.Screen
+        options={{headerShown: true, headerTitleAlign: 'center'}}
+        name={NavStrings.SelectLanguage}
+        component={SelectLanguage}
       />
       <Stack.Screen
         options={{headerShown: true, headerTitleAlign: 'center'}}

@@ -8,7 +8,9 @@ export default function HomeButton({image, onPress, text, imageStyle}) {
   return (
     <TouchableOpacity style={styles.root} onPress={onPress}>
       <Image source={image} style={styles.imageStyle} />
-      <Text style={styles.text}>{text}</Text>
+      <Text numberOfLines={1} style={styles.text}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -32,5 +34,6 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: 12,
     top: 5,
+    textAlign: 'left',
   },
 });

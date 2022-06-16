@@ -7,6 +7,7 @@ import {Checkbox} from 'react-native-paper';
 import CheckBox from '../../component/CheckBox';
 import AppButton from '../../component/AppButton';
 import {color} from 'react-native-reanimated';
+import strings from '../../constants/language/LocalizedString';
 
 export default function SoilTesting() {
   const [select, setselect] = useState({});
@@ -25,13 +26,13 @@ export default function SoilTesting() {
     <View style={styles.root}>
       <Dropdown
         inputstyle={styles.input}
-        label="Soil Type"
-        placeholderText="Select land Type..."
+        label={strings.soilType}
+        placeholderText={strings.selectLand}
         select={item => setselect(item)}
       />
       <CheckBox selectedValue={setselectedValues} />
       <AppButton
-        name="Testing"
+        name={strings.test}
         onPress={() => sjowModal()}
         BTstyle={styles.btn}
       />

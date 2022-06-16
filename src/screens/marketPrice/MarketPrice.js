@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import ImgPath from '../../constants/ImgPath';
 import {styles} from './styles';
 import COLORS from '../../style/COLORS';
+import strings from '../../constants/language/LocalizedString';
 
 export default function MarketPrice() {
   const [searchLocation, setsearchLocation] = useState('');
@@ -49,7 +50,7 @@ export default function MarketPrice() {
                 onChangeText={v => setsearchLocation(v)}
                 style={styles.searchInput}
                 value={searchLocation}
-                placeholder="Location..."
+                placeholder={strings.location}
                 placeholderTextColor={COLORS.lightBlack}
               />
             </View>
@@ -61,14 +62,14 @@ export default function MarketPrice() {
                 onChangeText={v => setsearchName(v)}
                 style={styles.searchInput}
                 value={searchName}
-                placeholder="Name..."
+                placeholder={strings.name}
                 placeholderTextColor={COLORS.lightBlack}
               />
             </View>
           </View>
         </View>
         <TouchableOpacity onPress={() => search()} style={styles.searchBtn}>
-          <Text style={styles.searchBtnTxt}>FIlter</Text>
+          <Text style={styles.searchBtnTxt}>{strings.filter}</Text>
         </TouchableOpacity>
       </View>
       <FlatList

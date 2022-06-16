@@ -24,6 +24,7 @@ import NavStrings from '../../constants/NavStrings';
 import {useDispatch, useSelector} from 'react-redux';
 import {check, PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import {getweatherData} from '../../Store/actions/weatherAction';
+import strings from '../../constants/language/LocalizedString';
 
 export default function Home({navigation}) {
   const user = useSelector(state => state.AuthReducer.userData);
@@ -84,24 +85,10 @@ export default function Home({navigation}) {
     dispatch(getweatherData(lat, lon));
   }, [lat !== '', lon !== '']);
 
-  const images = [
-    ImgPath.banner5,
-    ImgPath.banner4,
-    ImgPath.banner3,
-    ImgPath.banner2,
-    ImgPath.banner1,
-  ];
+  const images = [ImgPath.banner4, ImgPath.banner3, ImgPath.banner2];
   return (
     <ScrollView contentContainerStyle={styles.root} nestedScrollEnabled={true}>
       <Header />
-      {/* <View style={styles.AddNewContainer}>
-        <View style={styles.addBtnContainer}>
-          <View style={styles.addBtn}>
-            <Image source={ImgPath.Add} style={styles.AddImg} />
-          </View>
-          <Text style={styles.AddNewText}>Add New</Text>
-        </View>
-      </View> */}
       <View
         style={{
           borderRadius: 15,
@@ -128,7 +115,7 @@ export default function Home({navigation}) {
                 admin ? NavStrings.AllProducts : NavStrings.Shop,
               )
             }
-            text={admin ? 'Products' : 'Shop'}
+            text={admin ? 'Products' : strings.shop}
           />
           <HomeButton
             image={admin ? ImgPath.Add : ImgPath.book}
@@ -137,12 +124,12 @@ export default function Home({navigation}) {
                 admin ? NavStrings.AllCrops : NavStrings.CropPractices,
               )
             }
-            text={admin ? 'Crops' : 'Crop Practices'}
+            text={admin ? 'Crops' : strings.cropPractices}
           />
           <HomeButton
             image={ImgPath.support}
             onPress={() => navigation.navigate(NavStrings.Chat)}
-            text={admin ? 'Chats' : 'Crop Advisory'}
+            text={admin ? 'Chats' : strings.cropAdvisory}
           />
         </View>
         <View
@@ -154,12 +141,12 @@ export default function Home({navigation}) {
           <HomeButton
             image={ImgPath.testing}
             onPress={() => navigation.navigate(NavStrings.SoilTesting)}
-            text="Soil Testing"
+            text={strings.soilTesting}
           />
           <HomeButton
             image={ImgPath.video}
             onPress={() => navigation.navigate(NavStrings.Videos)}
-            text="Videos"
+            text={strings.videos}
           />
           <HomeButton
             image={admin ? ImgPath.Add : ImgPath.dollar}
@@ -168,14 +155,14 @@ export default function Home({navigation}) {
                 admin ? NavStrings.AllPrices : NavStrings.MarketPrice,
               )
             }
-            text={admin ? 'Market Price' : 'Market Price'}
+            text={admin ? 'Market Price' : strings.marketPrice}
           />
         </View>
         <View
           style={{
             flexDirection: 'row',
 
-            justifyContent: 'space-between',
+            justifyContent: 'space-evenly',
             marginBottom: 10,
           }}>
           <HomeButton
@@ -185,18 +172,13 @@ export default function Home({navigation}) {
                 admin ? NavStrings.SaleHistory : NavStrings.PurchaseHistory,
               )
             }
-            text={admin ? 'sale' : 'purchase'}
-          />
-          <HomeButton
-            image={ImgPath.weather}
-            onPress={() => navigation.navigate(NavStrings)}
-            text="Weather"
+            text={admin ? 'sale' : strings.purchase}
           />
 
           <HomeButton
             image={ImgPath.cart}
             onPress={() => navigation.navigate(NavStrings.Cart)}
-            text="cart"
+            text={strings.cart}
           />
         </View>
       </View>
@@ -214,9 +196,11 @@ export default function Home({navigation}) {
       </View>
       <View style={styles.shopingCardContainer}>
         <View style={styles.shopHeader}>
-          <Text style={styles.recomemdedTxt}>Recommended Products</Text>
+          <Text style={styles.recomemdedTxt}>
+            {strings.recommendedProducts}
+          </Text>
           <TouchableOpacity>
-            <Text style={styles.viewAllTxt}>View All</Text>
+            <Text style={styles.viewAllTxt}>{strings.viewAll}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.container}>

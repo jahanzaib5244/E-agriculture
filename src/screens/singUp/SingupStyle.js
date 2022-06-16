@@ -1,10 +1,11 @@
 import {StyleSheet} from 'react-native';
 import {Colors, font, size} from '../../config/Utils';
+import COLORS from '../../style/COLORS';
 
 export const SingupStyle = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: COLORS.primary,
   },
   uppercontainer: {
     flex: 0.2,

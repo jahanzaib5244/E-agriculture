@@ -7,6 +7,7 @@ import ProductCard from '../../component/ProductCard';
 import ImgPath from '../../constants/ImgPath';
 import {useSelector} from 'react-redux';
 import NavStrings from '../../constants/NavStrings';
+import strings from '../../constants/language/LocalizedString';
 export default function Shop({navigation}) {
   const AllProcuts = useSelector(state => state.AuthReducer.AllProducts);
   const user = useSelector(state => state.AuthReducer.userData);
@@ -19,7 +20,7 @@ export default function Shop({navigation}) {
           style={styles.categoryBtn}
           onPress={() => navigation.navigate(NavStrings.Cart)}>
           <Image source={ImgPath.cart} style={styles.categoryBtnImg} />
-          <Text style={styles.CategoryTxt}>Cart</Text>
+          <Text style={styles.CategoryTxt}>{strings.cart}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.categoryBtn}
@@ -32,14 +33,16 @@ export default function Shop({navigation}) {
           }>
           <Image source={ImgPath.buy} style={styles.categoryBtnImg} />
           <Text style={styles.CategoryTxt}>
-            {user?.role == 'admin' ? 'Sale' : 'Purchase'} History
+            {user?.role == 'admin'
+              ? strings.saleHistory
+              : strings.purchaseHistory}
           </Text>
         </TouchableOpacity>
       </View>
 
       <View>
         <View style={styles.shopHeader}>
-          <Text style={styles.recomemdedTxt}>Top Selling Products</Text>
+          <Text style={styles.recomemdedTxt}>{strings.topSelling}</Text>
         </View>
         <ScrollView horizontal>
           {AllProcuts.map((item, index) => {
@@ -55,7 +58,7 @@ export default function Shop({navigation}) {
       </View>
       <View>
         <View style={styles.shopHeader}>
-          <Text style={styles.recomemdedTxt}>All Products</Text>
+          <Text style={styles.recomemdedTxt}>{strings.allProducts}</Text>
         </View>
         <View style={styles.container}>
           {AllProcuts.map((item, index) => {

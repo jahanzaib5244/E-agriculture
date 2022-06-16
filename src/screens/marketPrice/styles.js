@@ -22,6 +22,8 @@ export const styles = StyleSheet.create({
     fontSize: FONTS.des,
     padding: 0,
     color: COLORS.black,
+
+    paddingHorizontal: moderateScale(10),
   },
   searchicon: {
     height: moderateScale(15),
@@ -49,6 +51,7 @@ export const styles = StyleSheet.create({
     color: COLORS.white,
     paddingHorizontal: moderateScale(15),
     fontSize: FONTS.des,
+    textAlign: 'left',
   },
   priceCard: {
     marginHorizontal: moderateScale(25),

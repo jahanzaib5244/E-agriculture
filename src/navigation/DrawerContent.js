@@ -11,6 +11,7 @@ import PImage from 'react-native-image-progress';
 
 import {Colors} from '../config/Utils';
 import {dologout} from '../Store/actions/AuthActions';
+import strings from '../constants/language/LocalizedString';
 export default function Drawercontent(props) {
   const userdata = useSelector(state => state.AuthReducer.userData);
   const profilePic = useSelector(state => state.AuthReducer.ProfilePic);
@@ -83,8 +84,9 @@ export default function Drawercontent(props) {
                   fontFamily: 'Roboto-Medium',
                   marginLeft: 10,
                   color: Colors.black,
+                  textAlign: 'left',
                 }}>
-                Sign Out
+                {strings.signout}
               </Text>
             </View>
           </TouchableOpacity>

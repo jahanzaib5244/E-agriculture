@@ -4,7 +4,9 @@ import {
   Image,
   View,
   TouchableOpacity,
+  Modal,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import {moderateScale, moderateVerticalScale} from 'react-native-size-matters';
@@ -14,12 +16,16 @@ import COLORS from '../style/COLORS';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import moment from 'moment';
+import Input from './Input';
 
 const CartItem = ({item = {}, index = 0}) => {
-  console.log(item);
   const [loading, setloading] = useState(false);
   const [quanity, setquanity] = useState(1);
-
+  const [modal, setmodal] = useState(false);
+  const [mathad, setmathad] = useState('card');
+  const [address, setaddress] = useState('');
+  const [paymentNumber, setpaymentNumber] = useState('');
+  console.log(modal);
   const quanityAdd = () => {
     setquanity(quanity + 1);
   };
@@ -41,6 +47,7 @@ const CartItem = ({item = {}, index = 0}) => {
 
   const buy = async () => {
     try {
+      setmodal(false);
       setloading(true);
       const uid = auth().currentUser.uid;
       setloading(true);
@@ -57,6 +64,8 @@ const CartItem = ({item = {}, index = 0}) => {
           tottalPrice: quanity * item?.dicountPrice,
           purchaseAt: timeStamp,
           id: `${uid}-${random}`,
+          address,
+          paymentNumber: mathad == 'hand' ? '' : paymentNumber,
         });
       await firestore()
         .collection('sale')
@@ -65,8 +74,15 @@ const CartItem = ({item = {}, index = 0}) => {
           quanity,
           tottalPrice: quanity * item?.dicountPrice,
           purchaseAt: timeStamp,
+          paymentNumber: mathad == 'hand' ? '' : paymentNumber,
+          address,
         });
       setloading(false);
+      ToastAndroid.showWithGravity(
+        'Item puchase successfully you will receive it soon',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
       deleteItem();
     } catch (error) {
       console.log(error);
@@ -119,10 +135,12 @@ const CartItem = ({item = {}, index = 0}) => {
         </View>
         <View style={styles.actionBtn}>
           <TouchableOpacity onPress={() => deleteItem()} style={styles.delBtn}>
-            <Text style={styles.btnTxt}>Delete</Text>
+            <Text style={styles.btnTxt}>Remove</Text>
             <Image source={ImgPath.delete} style={styles.actionImg} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => buy()} style={styles.delBtn}>
+          <TouchableOpacity
+            onPress={() => setmodal(true)}
+            style={styles.delBtn}>
             <Text style={styles.btnTxt}>Buy</Text>
             {loading ? (
               <ActivityIndicator size={14} color={COLORS.white} />
@@ -132,6 +150,123 @@ const CartItem = ({item = {}, index = 0}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Modal
+        style={styles.modalStyle}
+        onRequestClose={() => setmodal(false)}
+        transparent={true}
+        animationType="slide"
+        visible={modal}>
+        <View style={styles.modelContainer}>
+          <View style={styles.modelInnerContainer}>
+            <View>
+              <Text style={styles.paymentoptionTxt}>Payment Options</Text>
+              <View style={styles.ptmentBtnContainer}>
+                <TouchableOpacity
+                  onPress={() => setmathad('card')}
+                  style={[
+                    styles.paymentBtn,
+                    {
+                      backgroundColor:
+                        mathad == 'card' ? COLORS.primary : COLORS.white,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.paymentBtnTxt,
+                      {color: mathad == 'card' ? COLORS.white : COLORS.primary},
+                    ]}>
+                    Credit card
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setmathad('jazz')}
+                  style={[
+                    styles.paymentBtn,
+                    {
+                      backgroundColor:
+                        mathad == 'jazz' ? COLORS.primary : COLORS.white,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.paymentBtnTxt,
+                      {color: mathad == 'jazz' ? COLORS.white : COLORS.primary},
+                    ]}>
+                    Jazz Cash
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setmathad('hand')}
+                  style={[
+                    styles.paymentBtn,
+                    {
+                      backgroundColor:
+                        mathad == 'hand' ? COLORS.primary : COLORS.white,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.paymentBtnTxt,
+                      {color: mathad == 'hand' ? COLORS.white : COLORS.primary},
+                    ]}>
+                    By Hand
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.inputHeading}>
+                  {mathad == 'card'
+                    ? 'Enter Your Credit Card Number'
+                    : mathad == 'jazz'
+                    ? 'Enter Your Jazz cash Number'
+                    : 'Payment will be receive on delivery time'}
+                </Text>
+
+                {mathad !== 'hand' && (
+                  <Input
+                    keyboardType="numeric"
+                    name={
+                      mathad == 'card'
+                        ? 'Card Number'
+                        : mathad == 'jazz'
+                        ? 'Jazz cash Number'
+                        : ''
+                    }
+                    placeholder={
+                      mathad == 'card'
+                        ? 'Enter Card Number...'
+                        : mathad == 'jazz'
+                        ? 'Enter Jazz cash Number...'
+                        : ''
+                    }
+                    inputstyle={styles.inputField}
+                    onchange={v => setpaymentNumber(v)}
+                  />
+                )}
+                <Text style={styles.inputHeading}>
+                  Please Insert Your delivrery address
+                </Text>
+                <Input
+                  name={'Adress'}
+                  placeholder={'Enter Your delivery address'}
+                  inputstyle={styles.inputField}
+                  onchange={v => setaddress(v)}
+                />
+              </View>
+            </View>
+            <View style={styles.actionBtnContainer}>
+              <TouchableOpacity
+                style={styles.paymentBtn}
+                onPress={() => setmodal(false)}>
+                <Text style={styles.paymentBtnTxt}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => buy()} style={styles.paymentBtn}>
+                <Text style={styles.paymentBtnTxt}>Buy</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -143,6 +278,62 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: FONTS.heading,
     fontWeight: '700',
+  },
+  inputHeading: {
+    color: COLORS.primary,
+    marginHorizontal: moderateScale(25),
+    fontSize: FONTS.des,
+    marginTop: moderateVerticalScale(10),
+  },
+  actionBtnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: moderateVerticalScale(15),
+  },
+  inputField: {
+    marginHorizontal: moderateScale(20),
+    marginTop: moderateVerticalScale(15),
+  },
+  paymentBtn: {
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: moderateVerticalScale(10),
+    borderRadius: moderateScale(10),
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  paymentBtnTxt: {
+    color: COLORS.white,
+    fontSize: FONTS.heading,
+    fontWeight: '700',
+  },
+  ptmentBtnContainer: {
+    marginHorizontal: moderateScale(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  paymentoptionTxt: {
+    color: COLORS.black,
+    fontSize: FONTS.medium,
+    alignSelf: 'center',
+    fontWeight: '700',
+    paddingVertical: moderateVerticalScale(15),
+  },
+  modalStyle: {
+    flex: 1,
+  },
+  modelContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modelInnerContainer: {
+    backgroundColor: COLORS.white,
+    height: moderateVerticalScale(400),
+    width: '90%',
+    borderRadius: moderateScale(15),
+    justifyContent: 'space-between',
   },
   addBtn: {
     backgroundColor: COLORS.primary,

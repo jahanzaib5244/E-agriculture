@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     fontSize: FONTS.des,
     fontWeight: '700',
     letterSpacing: 1,
+    textAlign: 'left',
   },
   textinput: {
     color: Colors.black,
